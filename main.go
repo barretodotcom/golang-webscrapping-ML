@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"webs/scrapper"
@@ -19,14 +20,16 @@ func init() {
 
 func main() {
 
-	product := "adaptador usb c"
-	var index int8 = 1
-	var finalIndex int8 = 1
+	product := "VINHO"
+	var index int64 = 1
+	var finalIndex int64 = 3
 	url := "https://lista.mercadolivre.com.br/<<PRODUCT>>_Desde_<<INDEX>>_NoIndex_True"
 
 	productChan := make(chan structs.Product)
-	go scrapper.FormatUrls(product, url, index, finalIndex, productChan)
 	products := []structs.Product{}
+
+	go scrapper.FormatUrls(product, url, index, finalIndex, productChan)
+
 	for prod := range productChan {
 		products = append(products, prod)
 	}
@@ -38,4 +41,5 @@ func main() {
 	file, _ := os.Create("products.csv")
 
 	file.Write([]byte(csv))
+	fmt.Print("Processo finalizado.")
 }
